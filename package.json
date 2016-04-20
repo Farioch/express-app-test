@@ -1,0 +1,33 @@
+{
+  "name": "test_app",
+  "version": "1.0.1",
+  "description": "nodejs testing app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Farioch",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "passport": "^0.3.2",
+    "passport-steam": "^1.0.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Farioch/express-app-test.git"
+  },
+  "keywords": [
+    "express",
+    "test-app",
+    "openID",
+    "steam"
+  ],
+  "bugs": {
+    "url": "https://github.com/Farioch/express-app-test/issues"
+  },
+  "homepage": "https://github.com/Farioch/express-app-test#readme"
+}
