@@ -1,0 +1,13 @@
+
+div{
+	width: 80%;
+	display: block;
+}
+
+ul{
+	width: 200px;
+	height: 100px;
+	display: block;
+	position: relative;
+	float: right;
+}
