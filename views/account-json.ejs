@@ -1,7 +1,22 @@
+<!doctype html>
+<html>
+<head>
+  	<meta charset="utf-8">
+  	<title>Account Inventory</title>
+	
+	<link rel="stylesheet" type="text/css" href="/css/account-json.css" />
 
-<p><img src='<%= user.photos[2].value %>' alt='Your Avatar Image' /></p>
-<p>ID: <%= user.id %></p>
-<p>Name: <%= user.displayName %></p>
+</head>
 
-<p>JSON: <%= user %></p>
+<body>
+	<div>
+		<% for(var i=0; i<items.length; i++) {%>
+			
+   			<ul><%= items[i].name %>
+   				<li>Lowest price: <%= items[i].priceData.lowest_price %> USD</li>
+   				<img src="http://steamcommunity-a.akamaihd.net/economy/image/<%= items[i].icon_url %>" width="40px" height="40px"></img>
+  			</ul>
+		<% } %>
+	</div>
 
+</body>

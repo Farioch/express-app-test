@@ -2,7 +2,17 @@ var express = require('express')
   , passport = require('passport')
   , util = require('util')
   , session = require('express-session')
-  , SteamStrategy = require('passport-steam').Strategy;
+  , SteamStrategy = require('passport-steam').Strategy
+  , request = require('request')
+  , MarketPriceManager = require('steam-market-manager');
+
+//Steam market manager instance(CS:GO)
+var market = new MarketPriceManager({
+	"appID": 730,
+	"backpacktf" : "5718ca93866747306e3c5997",
+	"cache": 3600
+});
+
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -58,7 +68,7 @@ app.use(session({
 // persistent login sessions (recommended).
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(__dirname + '/../../public'));
+app.use(express.static(__dirname + '/static'));
 
 app.get('/', function(req, res){
   res.render('index', { user: req.user });
@@ -68,9 +78,48 @@ app.get('/account', ensureAuthenticated, function(req, res){
   res.render('account', { user: req.user });
 });
 
+/*
 app.get('/account-json', ensureAuthenticated, function(req, res){
-  res.render('account-json', { user: req.user });
+  var SteamInventoryURL =  'http://steamcommunity.com/profiles/' + req.user.id + '/inventory/json/730/2';
+  //console.log(SteamInventoryURL);
+  request({
+  	url: SteamInventoryURL,
+  	json: true
+  }, function (error, response, body) {
+  	if (!error && response.statusCode === 200) {
+  		//console.log(body);
+  		res.render('account-json', {user: req.user, json: JSON.stringify(body, null, 2)});
+  	} else { 
+  		res.redirect('/');
+  	} 
+  });
+
+  //res.render('account-json', { user: req.user });
+
   //console.log(req.user);
+}); */
+
+app.get('/account-json', ensureAuthenticated, function(req, res){
+	market.getAllItems({}, function(err) {
+		if( err) {
+			console.log('Error', err);
+			return;
+		}
+		market.getInventory({
+			'steamid': req.user.id,
+			'contextID': 2,
+			'getWithPrices': true,
+			'tradableOnly': true,
+		}, function(err, inventory) {
+			if( err) {
+				console.log('Error: ', err);
+				return;
+			}
+			//inventory.forEach(function (item) {});
+			res.render('account-json', {items: inventory})
+			//console.log('Inventory: ', inventory); //  An array containing CEconItem objects for the user's inventory items
+		});
+	});
 });
 
 app.get('/logout', function(req, res){
@@ -111,3 +160,5 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
   res.redirect('/');
 }
+
+// http://steamcommunity.com/profiles/<PROFILEID>/inventory/json/753/1 76561198052424084
